@@ -146,11 +146,35 @@
       else if (e.key === 'ArrowLeft') show(cur - 1);
       else if (e.key === 'ArrowRight') show(cur + 1);
     });
+    // свайп на телефоне
+    var tx = 0;
+    lb.addEventListener('touchstart', function (e) { tx = e.changedTouches[0].clientX; }, { passive: true });
+    lb.addEventListener('touchend', function (e) {
+      var dx = e.changedTouches[0].clientX - tx;
+      if (Math.abs(dx) > 40) show(cur + (dx < 0 ? 1 : -1));
+    }, { passive: true });
+  }
+
+  // ---- Появление секций при скролле ----
+  function initReveal() {
+    var els = document.querySelectorAll('#v-обзор .block');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    els.forEach(function (el) { el.classList.add('reveal'); });
+    if (reduce || !('IntersectionObserver' in window)) {
+      els.forEach(function (el) { el.classList.add('in'); }); return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
   }
 
   // ---- Init ----
   buildDocs();
   initLightbox();
+  initReveal();
   window.addEventListener('hashchange', route);
   route();
 })();

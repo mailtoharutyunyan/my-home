@@ -12,8 +12,8 @@
 
   // размеры (толщины в см), цены, курс
   var DEFAULTS = {
-    dims: { L: 14, B: 13, n: 2, H: 3, hall: 80, tFound: 30, tLean: 10, tSlab: 16,
-            tExt: 20, colN: 20, colW: 30, beamLen: 188, beamSec: 0.12, openPct: 15, resPct: 5 },
+    dims: { L: 14, B: 13, n: 2, H: 3, hall: 80, fLen: 84, fW: 50, fH: 80, tGround: 10, tLean: 10,
+            tSlab: 16, tExt: 20, colN: 20, colW: 30, beamLen: 188, beamSec: 0.12, openPct: 15, resPct: 5 },
     prices: { concrete: 40000, lean: 30000, rebar: 350000, gasblock: 42000, bedding: 8000,
               miscPct: 10, labor: 11000, rate: 385 }
   };
@@ -63,21 +63,22 @@
     var perim = 2 * (d.L + d.B);
     var res = 1 + d.resPct / 100;
 
-    var vFound = footprint * d.tFound / 100;
-    var vLean = footprint * d.tLean / 100;
+    var vLenta = d.fLen * (d.fW / 100) * (d.fH / 100);   // ленточный фундамент
+    var vFloorG = footprint * d.tGround / 100;            // пол по грунту
+    var vLean = d.fLen * (d.fW / 100) * (d.tLean / 100);  // подбетонка под ленту
     var vCols = d.colN * Math.pow(d.colW / 100, 2) * Htot;
     var vBeams = d.beamLen * d.beamSec;
     var vSlab = upper * d.tSlab / 100;
     var vRoof = footprint * d.tSlab / 100;
-    var m300base = vFound + vCols + vBeams + vSlab + vRoof;
+    var m300base = vLenta + vFloorG + vCols + vBeams + vSlab + vRoof;
     var vM300 = m300base * res;
 
-    var kg = (vFound * 100 + vCols * 150 + vBeams * 150 + (vSlab + vRoof) * 90) * res;
+    var kg = (vLenta * 100 + vFloorG * 70 + vCols * 150 + vBeams * 150 + (vSlab + vRoof) * 90) * res;
     var tReb = kg / 1000;
 
     var extArea = perim * Htot * (1 - d.openPct / 100);
     var vGas = (extArea * d.tExt / 100 + useful * PART_COEF) * res;
-    var vBed = footprint * 0.30;
+    var vBed = footprint * 0.15;
 
     var q = { m300: vM300, lean: vLean, rebar: tReb, gas: vGas, bed: vBed };
     var c = { m300: vM300 * p.concrete, lean: vLean * p.lean, rebar: tReb * p.rebar,
@@ -101,8 +102,9 @@
       footprint: footprint, useful: useful, upper: upper, Htot: Htot, extArea: extArea,
       q: q, c: c, misc: misc, materials: materials, labor: labor, box: box,
       finRows: finRows, finish: finish, turnkey: box + finish,
-      bd: { found: [vFound, vFound * 100], lean: [vLean, 0], cols: [vCols, vCols * 150],
-            beams: [vBeams, vBeams * 150], slab: [vSlab, vSlab * 90], roof: [vRoof, vRoof * 90],
+      bd: { lenta: [vLenta, vLenta * 100], floorg: [vFloorG, vFloorG * 70], lean: [vLean, 0],
+            cols: [vCols, vCols * 150], beams: [vBeams, vBeams * 150],
+            slab: [vSlab, vSlab * 90], roof: [vRoof, vRoof * 90],
             res: [m300base * (res - 1), kg / res * (res - 1)] }
     };
   }
@@ -142,7 +144,8 @@
       + '<div class="dim-grid">'
       + dim('L', 'Фасад L, м') + dim('B', 'Глубина B, м') + dim('n', 'Этажей', '1')
       + dim('H', 'Высота этажа, м', '0.1') + dim('hall', 'Зал, м²')
-      + dim('tFound', 'Плита фунд., см') + dim('tLean', 'Подбетонка, см')
+      + dim('fLen', 'Лента, пог.м') + dim('fW', 'Лента ширина, см') + dim('fH', 'Лента высота, см')
+      + dim('tGround', 'Пол по грунту, см') + dim('tLean', 'Подбетонка, см')
       + dim('tSlab', 'Перекрытие, см') + dim('tExt', 'Стена нар., см')
       + dim('colN', 'Колонн, шт', '1') + dim('colW', 'Колонна, см')
       + dim('beamLen', 'Ригели, пог.м') + dim('beamSec', 'Ригель сеч., м²', '0.01')
@@ -161,7 +164,8 @@
 
       + '<section class="block"><h2>Разбивка по конструкциям <span class="tag">STR</span></h2>'
       + '<table class="calc"><thead><tr><th>Конструкция</th><th>Бетон, м³</th><th>Арматура, кг</th></tr></thead><tbody>'
-      + bdRow('found', 'Плита фундамента') + bdRow('lean', 'Подбетонка М100')
+      + bdRow('lenta', 'Ленточный фундамент') + bdRow('floorg', 'Пол по грунту')
+      + bdRow('lean', 'Подбетонка М100')
       + bdRow('cols', 'Колонны') + bdRow('beams', 'Ригели')
       + bdRow('slab', 'Перекрытия') + bdRow('roof', 'Крыша')
       + bdRow('res', 'Запас (лестница/отходы)')
@@ -200,6 +204,7 @@
       + '</div>'
       + '<div class="calc-actions"><button class="reset" id="c-reset">↺ Сбросить</button>'
       + '<button class="reset" id="c-csv">⤓ Скачать CSV</button>'
+      + '<button class="reset" id="c-pdf">🖨 PDF / печать</button>'
       + '<span class="rate">значения сохраняются в браузере</span></div>'
       + '</section>';
   }
@@ -227,7 +232,7 @@
     MAT.forEach(function (m) { set('q-' + m.id, m.id === 'rebar' ? f1(r.q[m.id]) : f1(r.q[m.id])); set('s-' + m.id, fmt(r.c[m.id])); });
     set('s-misc', fmt(r.misc)); set('s-materials', fmt(r.materials));
     // разбивка
-    ['found', 'lean', 'cols', 'beams', 'slab', 'roof', 'res'].forEach(function (k) {
+    ['lenta', 'floorg', 'lean', 'cols', 'beams', 'slab', 'roof', 'res'].forEach(function (k) {
       set('bc-' + k, f1(r.bd[k][0])); set('br-' + k, fmt(r.bd[k][1]));
     });
     // работа / коробка
@@ -286,6 +291,7 @@
     root.addEventListener('change', refresh);
     document.getElementById('c-reset').addEventListener('click', reset);
     document.getElementById('c-csv').addEventListener('click', csv);
+    document.getElementById('c-pdf').addEventListener('click', function () { window.print(); });
   }
 
   build(); wire(); refresh();
