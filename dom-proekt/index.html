@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Дом 13×14 — визуальный проект</title>
+<style>
+  :root{
+    --bg:#0f1216; --panel:#171c22; --line:#2a323c; --ink:#e8edf2; --muted:#9aa7b4;
+    --accent:#4ea1ff; --house:#3a4a5e; --wall:#5b7089; --hall:#e0a458;
+    --c-beton:#4ea1ff; --c-armatura:#e0645a; --c-blok:#5ec27e; --c-proch:#c9a24b; --c-rabota:#a97bd6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--ink);line-height:1.5}
+  header{padding:28px 24px;border-bottom:1px solid var(--line);
+         background:linear-gradient(180deg,#1b2430,transparent)}
+  header h1{margin:0 0 4px;font-size:24px}
+  header p{margin:0;color:var(--muted)}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .v{font-size:22px;font-weight:700}
+  .kpi .l{color:var(--muted);font-size:13px;margin-top:2px}
+  section{background:var(--panel);border:1px solid var(--line);border-radius:14px;
+          padding:20px 22px;margin-bottom:22px}
+  section h2{margin:0 0 4px;font-size:18px}
+  section .sub{color:var(--muted);font-size:13px;margin:0 0 16px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:820px){.grid2{grid-template-columns:1fr}}
+  svg{max-width:100%;height:auto;display:block}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;font-size:13px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .sw{width:14px;height:14px;border-radius:3px;display:inline-block}
+  table{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:600}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .total td{font-weight:700;border-top:2px solid var(--line);border-bottom:none}
+  .bar-row{display:grid;grid-template-columns:150px 1fr 110px;align-items:center;gap:10px;margin:8px 0}
+  .bar-row .name{font-size:13px}
+  .bar-track{background:#0c0f13;border-radius:6px;height:22px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px}
+  .bar-row .val{text-align:right;font-size:13px;font-variant-numeric:tabular-nums}
+  .note{color:var(--muted);font-size:12px;margin-top:14px}
+  code{background:#0c0f13;padding:1px 6px;border-radius:5px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🏠 Дом 13 × 14 м · 2 этажа · двусветный зал</h1>
+  <p>Армения · участок 20 × 25 м · визуальная картина проекта «серой коробки»</p>
+</header>
+
+<div class="wrap">
+
+  <div class="kpis">
+    <div class="kpi"><div class="v">≈ 22,1 млн ֏</div><div class="l">Всего (коробка)</div></div>
+    <div class="kpi"><div class="v">≈ 57 000 $</div><div class="l">По курсу ~385 ֏/$</div></div>
+    <div class="kpi"><div class="v">≈ 60 700 ֏</div><div class="l">за м² коробки</div></div>
+    <div class="kpi"><div class="v">≈ 334 м²</div><div class="l">полезной площади</div></div>
+  </div>
+
+  <!-- ПЛАН УЧАСТКА -->
+  <section>
+    <h2>1 · План участка (в масштабе)</h2>
+    <p class="sub">Фасад по стороне 20 м. Дом в глубине, отступ 3 м от границ, двор перед домом ≈9 м.</p>
+    <div class="grid2">
+      <div>
+        <svg viewBox="0 0 440 540" role="img" aria-label="План участка">
+          <!-- участок -->
+          <rect x="20" y="20" width="400" height="500" fill="#12331f" stroke="#3f6b4a" stroke-width="2"/>
+          <!-- двор -->
+          <text x="220" y="120" fill="#8fc79f" font-size="15" text-anchor="middle">ДВОР / ПАРКОВКА (~9 м)</text>
+          <!-- дом: x 3..17м -> 60..340 ; y 9..22м -> 200..460 (масштаб 20px/м, offset 20) -->
+          <rect x="80" y="200" width="280" height="260" fill="#3a4a5e" stroke="#5b7089" stroke-width="3"/>
+          <text x="220" y="325" fill="#e8edf2" font-size="17" font-weight="700" text-anchor="middle">ДОМ</text>
+          <text x="220" y="348" fill="#cdd6df" font-size="14" text-anchor="middle">14 × 13 м · 182 м²/этаж</text>
+          <!-- размеры -->
+          <text x="220" y="14" fill="#9aa7b4" font-size="13" text-anchor="middle">◄─────── 20 м (фасад) ───────►</text>
+          <text x="432" y="275" fill="#9aa7b4" font-size="13" text-anchor="middle" transform="rotate(90,432,275)">◄──── 25 м ────►</text>
+          <!-- отступы -->
+          <text x="50" y="335" fill="#e0a458" font-size="11" text-anchor="middle">3 м</text>
+          <text x="390" y="335" fill="#e0a458" font-size="11" text-anchor="middle">3 м</text>
+          <text x="220" y="500" fill="#e0a458" font-size="11" text-anchor="middle">3 м (задний отступ)</text>
+        </svg>
+      </div>
+      <div>
+        <table>
+          <tr><th>Показатель</th><th class="num">Значение</th></tr>
+          <tr><td>Участок</td><td class="num">20 × 25 = 500 м²</td></tr>
+          <tr><td>Дом (пятно)</td><td class="num">14 × 13 = 182 м²</td></tr>
+          <tr><td>Застройка</td><td class="num">≈ 36 %</td></tr>
+          <tr><td>Двор перед домом</td><td class="num">≈ 9 × 20 м</td></tr>
+          <tr><td>Отступы</td><td class="num">3 м с боков и сзади</td></tr>
+        </table>
+        <p class="note">Если фасад должен быть 13 м (а 14 м — глубина) — отступы по бокам станут 3,5 м.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ПЛАНЫ ЭТАЖЕЙ -->
+  <section>
+    <h2>2 · Планы этажей</h2>
+    <p class="sub">Зал двусветный: на 2-м этаже над ним — проём (пустота), плиты нет.</p>
+    <div class="grid2">
+      <div>
+        <svg viewBox="0 0 320 300" role="img" aria-label="1 этаж">
+          <rect x="20" y="20" width="280" height="260" fill="#1d2630" stroke="#5b7089" stroke-width="3"/>
+          <rect x="30" y="150" width="130" height="120" fill="#3a2f1c" stroke="#e0a458" stroke-width="2"/>
+          <text x="95" y="205" fill="#e0a458" font-size="14" font-weight="700" text-anchor="middle">ЗАЛ</text>
+          <text x="95" y="224" fill="#e0a458" font-size="12" text-anchor="middle">H = 6 м</text>
+          <text x="230" y="90" fill="#cdd6df" font-size="13" text-anchor="middle">комнаты,</text>
+          <text x="230" y="108" fill="#cdd6df" font-size="13" text-anchor="middle">кухня, с/у</text>
+          <text x="160" y="14" fill="#9aa7b4" font-size="13" text-anchor="middle">1 ЭТАЖ · 182 м²</text>
+        </svg>
+      </div>
+      <div>
+        <svg viewBox="0 0 320 300" role="img" aria-label="2 этаж">
+          <rect x="20" y="20" width="280" height="260" fill="#1d2630" stroke="#5b7089" stroke-width="3"/>
+          <rect x="30" y="150" width="130" height="120" fill="none" stroke="#e0a458" stroke-width="2" stroke-dasharray="6 5"/>
+          <text x="95" y="200" fill="#e0a458" font-size="12" text-anchor="middle">проём зала</text>
+          <text x="95" y="218" fill="#e0a458" font-size="12" text-anchor="middle">(пустота)</text>
+          <text x="230" y="90" fill="#cdd6df" font-size="13" text-anchor="middle">спальни,</text>
+          <text x="230" y="108" fill="#cdd6df" font-size="13" text-anchor="middle">с/у</text>
+          <text x="160" y="14" fill="#9aa7b4" font-size="13" text-anchor="middle">2 ЭТАЖ · ≈152 м²</text>
+        </svg>
+      </div>
+    </div>
+    <p class="note">Планировка условная — точное расположение комнат и лестницы задаёт архитектор.</p>
+  </section>
+
+  <!-- РАЗРЕЗ -->
+  <section>
+    <h2>3 · Разрез — двусветный зал</h2>
+    <p class="sub">Высота зала 6 м на всю высоту дома; над остальной частью — перекрытие 2-го этажа.</p>
+    <svg viewBox="0 0 560 340" role="img" aria-label="Разрез дома">
+      <!-- крыша -->
+      <rect x="40" y="40" width="480" height="16" fill="#5b7089"/>
+      <text x="530" y="52" fill="#9aa7b4" font-size="11">крыша (монолит 16 см)</text>
+      <!-- 2 этаж стены -->
+      <rect x="40" y="56" width="12" height="220" fill="#3a4a5e"/>
+      <rect x="508" y="56" width="12" height="220" fill="#3a4a5e"/>
+      <!-- перекрытие 2 эт (только над правой частью, слева зал) -->
+      <rect x="240" y="150" width="268" height="14" fill="#5b7089"/>
+      <text x="374" y="145" fill="#9aa7b4" font-size="11" text-anchor="middle">перекрытие 2 эт.</text>
+      <!-- зал -->
+      <rect x="52" y="56" width="188" height="220" fill="#3a2f1c" stroke="#e0a458"/>
+      <text x="146" y="160" fill="#e0a458" font-size="16" font-weight="700" text-anchor="middle">ЗАЛ</text>
+      <text x="146" y="182" fill="#e0a458" font-size="13" text-anchor="middle">H = 6 м</text>
+      <!-- 2 этаж помещения -->
+      <text x="374" y="110" fill="#cdd6df" font-size="13" text-anchor="middle">2 этаж</text>
+      <!-- 1 этаж помещения справа -->
+      <text x="374" y="230" fill="#cdd6df" font-size="13" text-anchor="middle">1 этаж</text>
+      <!-- фундамент -->
+      <rect x="40" y="276" width="480" height="22" fill="#3a4a5e"/>
+      <text x="530" y="291" fill="#9aa7b4" font-size="11">плита 30 см</text>
+      <!-- подсыпка -->
+      <rect x="40" y="298" width="480" height="14" fill="#2a323c"/>
+      <text x="280" y="326" fill="#9aa7b4" font-size="11" text-anchor="middle">подбетонка 10 см + щебень</text>
+      <!-- высота -->
+      <text x="30" y="170" fill="#9aa7b4" font-size="12" text-anchor="middle" transform="rotate(-90,30,170)">6 м</text>
+    </svg>
+  </section>
+
+  <!-- СМЕТА -->
+  <section>
+    <h2>4 · Структура затрат</h2>
+    <p class="sub">Серая коробка: материалы + работа бригады. Всего ≈ 22,1 млн ֏.</p>
+
+    <div class="bar-row"><div class="name">Бетон (165 м³)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--c-beton)"></div></div>
+      <div class="val">6,60 млн</div></div>
+    <div class="bar-row"><div class="name">Арматура (16 т)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:84.8%;background:var(--c-armatura)"></div></div>
+      <div class="val">5,60 млн</div></div>
+    <div class="bar-row"><div class="name">Работа бригады</div>
+      <div class="bar-track"><div class="bar-fill" style="width:60.7%;background:var(--c-rabota)"></div></div>
+      <div class="val">4,00 млн</div></div>
+    <div class="bar-row"><div class="name">Газоблок (85 м³)</div>
+      <div class="bar-track"><div class="bar-fill" style="width:54.1%;background:var(--c-blok)"></div></div>
+      <div class="val">3,57 млн</div></div>
+    <div class="bar-row"><div class="name">Подсыпка + прочее</div>
+      <div class="bar-track"><div class="bar-fill" style="width:35.6%;background:var(--c-proch)"></div></div>
+      <div class="val">2,35 млн</div></div>
+
+    <table>
+      <tr><th>Статья</th><th class="num">Кол-во</th><th class="num">Цена за ед.</th><th class="num">Сумма, ֏</th></tr>
+      <tr><td>Бетон М300 (с насосом+НДС)</td><td class="num">165 м³</td><td class="num">40 000</td><td class="num">6 600 000</td></tr>
+      <tr><td>Арматура А500С</td><td class="num">16 т</td><td class="num">350 000</td><td class="num">5 600 000</td></tr>
+      <tr><td>Газоблок</td><td class="num">85 м³</td><td class="num">42 000</td><td class="num">3 570 000</td></tr>
+      <tr><td>Подсыпка + прочее (~10%)</td><td class="num">компл.</td><td class="num">—</td><td class="num">2 350 000</td></tr>
+      <tr><td>Работа бригады</td><td class="num">364 м²</td><td class="num">11 000</td><td class="num">4 004 000</td></tr>
+      <tr class="total"><td>ВСЕГО (коробка)</td><td></td><td></td><td class="num">≈ 22 124 000</td></tr>
+    </table>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--c-beton)"></i>Бетон</span>
+      <span><i class="sw" style="background:var(--c-armatura)"></i>Арматура</span>
+      <span><i class="sw" style="background:var(--c-rabota)"></i>Работа</span>
+      <span><i class="sw" style="background:var(--c-blok)"></i>Газоблок</span>
+      <span><i class="sw" style="background:var(--c-proch)"></i>Прочее</span>
+    </div>
+    <p class="note">Цены: бетон — MM Leader, арматура — stalmetural.am/met-trans.am, газоблок — list.am.
+    Оценка без рабочих чертежей (±15%). Отделка, окна, инженерия — отдельно (см. <code>11-не-входит.md</code>).</p>
+  </section>
+
+  <p class="note">Открывается офлайн в любом браузере. Текстовые версии — в файлах <code>*.md</code> этой же папки.</p>
+</div>
+</body>
+</html>
