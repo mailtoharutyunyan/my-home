@@ -4,11 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Рабочий проект · Дом 13×14 · Армения</title>
-<meta name="description" content="Проект двухэтажного дома 13×14 м в Армении: чертежи, живой калькулятор сметы, разделы проекта.">
+<meta name="description" content="Проект двухэтажного дома 13×14 м в Армении: планировка, чертежи, 3D, галерея рендеров и умный калькулятор сметы.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem('myhome-theme')==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}</script>
+<link rel="stylesheet" href="assets/style.css?v=6">
 <script type="importmap">
 {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
 </script>
@@ -30,121 +31,161 @@
       <div class="val">Армения</div>
     </div>
     <div>
-      <div class="lbl">Смета</div>
-      <div class="val"><span class="accent" id="hdr-total">≈ 20,7 млн ֏</span></div>
+      <div class="lbl">Смета · коробка</div>
+      <div class="val"><span class="accent" id="hdr-total">≈ 20 млн ֏</span></div>
+    </div>
+    <div class="spacer">
+      <button id="theme-toggle" class="theme-toggle" aria-label="Светлая или тёмная тема" title="Светлая / тёмная">🌙</button>
     </div>
   </div>
 </header>
 
-<button class="menutoggle" onclick="document.querySelector('nav.index').classList.toggle('show')">☰ Листы</button>
+<nav class="tabs" id="tabs">
+  <div class="in">
+    <a href="#обзор" data-view="обзор">Обзор</a>
+    <a href="#планировка" data-view="планировка">Планировка</a>
+    <a href="#галерея" data-view="галерея">Галерея</a>
+    <a href="#смета" data-view="смета">Смета</a>
+    <a href="#документы" data-view="документы">Документы</a>
+  </div>
+</nav>
 
-<div class="shell">
-  <nav class="index" id="nav">
-    <div class="idx-h">Реестр листов</div>
-    <a href="#обзор" class="active" data-home><span class="no">—</span><span>Обзор проекта</span></a>
-    <div class="grp">Разделы</div>
-    <div id="doclinks"></div>
-  </nav>
+<main>
 
-  <main>
-    <!-- ===== HOME / DASHBOARD ===== -->
-    <div id="home">
-      <p class="eyebrow">Рабочий проект · серая коробка</p>
-      <h1 class="hero">Дом на 13 × 14 м<br>с залом у фасада</h1>
-      <p class="lede">Двусветный зал 8 × 10 м (80 м²) окнами на двор, объединён с кухней-студией
-      через раздвижную перегородку. На первом этаже — мастер-спальня и гостевой с/у. Монолитный
-      каркас, плита фундамента, плоская крыша. Ниже — чертежи, живой калькулятор сметы и все
-      разделы проекта. Меняйте объёмы или цены — итог пересчитывается сразу.</p>
-
-      <!-- DRAWINGS -->
-      <section class="block">
-        <h2>Чертежи <span class="tag">DWG</span></h2>
-        <p class="sub">Схемы в масштабе. Кликните лист в реестре слева для подробного раздела.</p>
-        <div class="plates">
-          <figure class="plate"><img src="assets/site-plan.svg" alt="Генплан участка 20×25 м">
-            <figcaption><span>Генплан · дом в глубине, зал у фасада</span><span>Л.01</span></figcaption></figure>
-          <figure class="plate"><img src="assets/floors.svg" alt="Планы 1 и 2 этажа">
-            <figcaption><span>Планы этажей · зал-студия, мастер-спальня, гостевой с/у</span><span>Л.02</span></figcaption></figure>
-          <figure class="plate"><img src="assets/section.svg" alt="Разрез с двусветным залом">
-            <figcaption><span>Разрез 1—1 · зал двусветный, H 6 м</span><span>Л.03</span></figcaption></figure>
+  <!-- ==================== ОБЗОР ==================== -->
+  <section class="view" id="v-обзор">
+    <div class="hero">
+      <img class="hero-bg" src="images/exterior-sunset.jpeg" alt="Экстерьер дома на закате">
+      <div class="hero-in">
+        <p class="eyebrow light">Рабочий проект · серая коробка · Армения</p>
+        <h1 class="hero-h">Дом 13 × 14 м<br>с двусветным залом</h1>
+        <p class="hero-sub">Зал-студия 8 × 10 м (80 м²) у фасада, объединён с кухней раздвижной
+          перегородкой. Мастер-спальня на 1-м этаже. Монолитный каркас, плоская крыша.</p>
+        <div class="hero-kpis">
+          <div class="kpi"><div class="v" id="ov-area">284</div><div class="k">м² полезной</div></div>
+          <div class="kpi"><div class="v"><span id="ov-total">20,2</span> млн</div><div class="k">коробка, ֏</div></div>
+          <div class="kpi"><div class="v">≈<span id="ov-usd">52</span>k</div><div class="k">USD, коробка</div></div>
         </div>
-      </section>
-
-      <!-- RENDERS GALLERY -->
-      <section class="block">
-        <h2>Визуализация <span class="tag">AI-РЕНДЕР</span></h2>
-        <p class="sub">Фотореалистичные образы по проекту (сгенерированы нейросетью). Кликните — открыть в полном размере.</p>
-        <div class="gallery">
-          <a class="span2" href="images/presentation-board.png" target="_blank" rel="noopener">
-            <img src="images/presentation-board.png" alt="Сводный лист проекта">
-            <span class="cap"><b>Сводный лист</b> · экстерьер, планы, интерьеры</span></a>
-          <a href="images/exterior-sunset.jpeg" target="_blank" rel="noopener">
-            <img src="images/exterior-sunset.jpeg" alt="Экстерьер на закате">
-            <span class="cap"><b>Экстерьер</b> · закат, вид со двора</span></a>
-          <a href="images/exterior-front-day.png" target="_blank" rel="noopener">
-            <img src="images/exterior-front-day.png" alt="Фасад днём">
-            <span class="cap"><b>Фасад</b> · дневной свет</span></a>
-          <a href="images/interior-studio.jpeg" target="_blank" rel="noopener">
-            <img src="images/interior-studio.jpeg" alt="Зал-студия с кухней">
-            <span class="cap"><b>Зал-студия</b> · кухня, галерея, двор</span></a>
-          <a href="images/interior-zal.png" target="_blank" rel="noopener">
-            <img src="images/interior-zal.png" alt="Двусветный зал с камином">
-            <span class="cap"><b>Зал</b> · камин, двусвет, лестница</span></a>
-          <a href="images/exterior-elevation.jpeg" target="_blank" rel="noopener">
-            <img src="images/exterior-elevation.jpeg" alt="Фронтальный фасад">
-            <span class="cap"><b>Фронтальный фасад</b> · остекление зала</span></a>
+        <div class="hero-cta">
+          <a class="biglink" href="#смета">Открыть калькулятор →</a>
+          <a class="biglink ghost" href="#планировка">Планировка и 3D</a>
         </div>
-        <p class="hint">Промпты для генерации своих ракурсов — в разделе «AI 3D-рендер» (лист 13).</p>
-      </section>
-
-      <!-- 3D MODEL -->
-      <section class="block">
-        <h2>3D-модель <span class="tag">МАССИНГ</span></h2>
-        <p class="sub">Объём точно по размерам (14 × 13 × 6 м). Тяните — вращать, колесо — зум. Скриншот годится как точный референс для AI-рендера.</p>
-        <div id="model3d">
-          <div class="m3d-legend">
-            <span><i style="background:#eef1ec;border:1px solid #8a9299"></i>стены</span><br>
-            <span><i style="background:#8bb7e6"></i>зал · стекло</span><br>
-            <span><i style="background:#8a9299"></i>плиты</span>
-          </div>
-          <div class="m3d-hint">🖱 тяните — вращать · колесо — зум</div>
-        </div>
-      </section>
-
-      <!-- CALCULATOR -->
-      <section class="block">
-        <h2>Калькулятор сметы <span class="tag">LIVE</span></h2>
-        <p class="sub">Редактируйте <b>объём</b> и <b>цену за единицу</b> — суммы, диаграмма и итог считаются на лету.</p>
-        <div class="calc-head">
-          <div>
-            <div class="subtotal">Итого (серая коробка)</div>
-            <div class="bigtotal"><span id="grand">20 709 000</span> <span class="cur">֏</span></div>
-          </div>
-          <div>
-            <div class="subtotal">≈ <span id="usd">53 790</span> $ · <span id="perm2">72 919</span> ֏/м²</div>
-            <div class="subtotal">материалы <span id="matsum">17 585 000</span> ֏ · работа <span id="worksum">3 124 000</span> ֏</div>
-          </div>
-        </div>
-
-        <table class="calc" id="calc">
-          <thead><tr><th>Позиция</th><th>Объём</th><th>Ед.</th><th>Цена за ед., ֏</th><th>Сумма, ֏</th></tr></thead>
-          <tbody id="calcbody"></tbody>
-        </table>
-
-        <div class="calc-actions">
-          <button class="reset" id="reset">↺ Сбросить к базовым</button>
-          <span class="rate">Курс ֏/$ <input id="rate" type="number" value="385" min="1" step="1" aria-label="Курс драма к доллару"></span>
-          <span class="rate">Площадь для ֏/м² <input id="area" type="number" value="284" min="1" step="1" aria-label="Площадь для расчёта цены за м²"> м²</span>
-        </div>
-        <p class="hint">Пример: увеличьте «Арматура» с 15,3 до 18 т — итог и полоса пересчитаются мгновенно.
-        Значения не сохраняются на сервере, только у вас в браузере.</p>
-      </section>
+      </div>
     </div>
 
-    <!-- ===== RENDERED MARKDOWN DOC ===== -->
-    <article id="doc"></article>
-  </main>
-</div>
+    <div class="quicklinks">
+      <a href="#планировка"><div class="t">Планировка</div><div class="d">генплан, планы этажей, разрез, 3D-модель</div></a>
+      <a href="#галерея"><div class="t">Галерея</div><div class="d">6 фотореалистичных AI-рендеров</div></a>
+      <a href="#смета"><div class="t">Смета</div><div class="d">умный калькулятор: объёмы из размеров</div></a>
+      <a href="#документы"><div class="t">Документы</div><div class="d">14 разделов проекта, цены, источники</div></a>
+    </div>
+
+    <section class="block">
+      <h2>Кратко о проекте <span class="tag">SPEC</span></h2>
+      <table class="spec">
+        <tr><td>Участок</td><td>20 × 25 м (500 м²), дом в глубине, отступы 3 м</td></tr>
+        <tr><td>Дом</td><td>13 × 14 м, 2 этажа, высота этажа 3 м</td></tr>
+        <tr><td>Зал</td><td>8 × 10 = 80 м², двусветный (H 6 м), окнами на двор</td></tr>
+        <tr><td>1-й этаж</td><td>зал-студия + кухня, мастер-спальня, гостевой с/у</td></tr>
+        <tr><td>2-й этаж</td><td>спальни, с/у, галерея над залом (≈102 м²)</td></tr>
+        <tr><td>Конструктив</td><td>монолитная плита, ж/б каркас, газоблок, плоская крыша</td></tr>
+      </table>
+    </section>
+  </section>
+
+  <!-- ==================== ПЛАНИРОВКА ==================== -->
+  <section class="view" id="v-планировка">
+    <p class="eyebrow">Планировка · чертежи и объём</p>
+    <h1 class="page-h">Планировка</h1>
+
+    <section class="block">
+      <h2>Чертежи <span class="tag">DWG</span></h2>
+      <p class="sub">Схемы в масштабе. Подробные разделы — во вкладке «Документы».</p>
+      <div class="plates">
+        <figure class="plate"><img src="assets/site-plan.svg" alt="Генплан участка 20×25 м" loading="lazy">
+          <figcaption><span>Генплан · дом в глубине, зал у фасада</span><span>Л.01</span></figcaption></figure>
+        <figure class="plate"><img src="assets/floors.svg" alt="Планы 1 и 2 этажа" loading="lazy">
+          <figcaption><span>Планы этажей · зал-студия, мастер-спальня, гостевой с/у</span><span>Л.02</span></figcaption></figure>
+        <figure class="plate"><img src="assets/section.svg" alt="Разрез с двусветным залом" loading="lazy">
+          <figcaption><span>Разрез 1—1 · зал двусветный, H 6 м</span><span>Л.03</span></figcaption></figure>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>3D-модель <span class="tag">МАССИНГ</span></h2>
+      <p class="sub">Объём точно по размерам (14 × 13 × 6 м). Тяните — вращать, колесо — зум. Виды: дом / без крыши / 1 / 2 этаж.</p>
+      <div id="model3d">
+        <div class="m3d-legend">
+          <span><i style="background:#f0f1ec;border:1px solid #8a9299"></i>штукатурка</span><br>
+          <span><i style="background:#d6c9ac"></i>травертин</span><br>
+          <span><i style="background:#a7c4e6"></i>стекло зала</span><br>
+          <span><i style="background:#868d93"></i>плиты/крыша</span>
+        </div>
+        <div class="m3d-hint">🖱 тяните — вращать · колесо — зум</div>
+      </div>
+    </section>
+  </section>
+
+  <!-- ==================== ГАЛЕРЕЯ ==================== -->
+  <section class="view" id="v-галерея">
+    <p class="eyebrow">Визуализация · AI-рендер</p>
+    <h1 class="page-h">Галерея</h1>
+    <p class="sub" style="margin-bottom:18px">Фотореалистичные образы по проекту (сгенерированы нейросетью). Кликните — открыть в полном размере.</p>
+
+    <div class="gsec-h">Сводный лист</div>
+    <div class="gallery">
+      <a class="span2" href="images/presentation-board.png" target="_blank" rel="noopener">
+        <img src="images/presentation-board.png" alt="Сводный лист проекта" loading="lazy">
+        <span class="cap"><b>Сводный лист</b> · экстерьер, планы, интерьеры</span></a>
+    </div>
+
+    <div class="gsec-h">Экстерьер</div>
+    <div class="gallery">
+      <a href="images/exterior-sunset.jpeg" target="_blank" rel="noopener">
+        <img src="images/exterior-sunset.jpeg" alt="Экстерьер на закате" loading="lazy">
+        <span class="cap"><b>Закат</b> · вид со двора</span></a>
+      <a href="images/exterior-front-day.png" target="_blank" rel="noopener">
+        <img src="images/exterior-front-day.png" alt="Фасад днём" loading="lazy">
+        <span class="cap"><b>Фасад</b> · дневной свет</span></a>
+      <a href="images/exterior-elevation.jpeg" target="_blank" rel="noopener">
+        <img src="images/exterior-elevation.jpeg" alt="Фронтальный фасад" loading="lazy">
+        <span class="cap"><b>Фронтальный фасад</b> · остекление зала</span></a>
+    </div>
+
+    <div class="gsec-h">Интерьер</div>
+    <div class="gallery">
+      <a href="images/interior-studio.jpeg" target="_blank" rel="noopener">
+        <img src="images/interior-studio.jpeg" alt="Зал-студия с кухней" loading="lazy">
+        <span class="cap"><b>Зал-студия</b> · кухня, галерея, двор</span></a>
+      <a href="images/interior-zal.png" target="_blank" rel="noopener">
+        <img src="images/interior-zal.png" alt="Двусветный зал с камином" loading="lazy">
+        <span class="cap"><b>Зал</b> · камин, двусвет, лестница</span></a>
+    </div>
+    <p class="hint">Промпты для генерации своих ракурсов — во вкладке «Документы», лист 13.</p>
+  </section>
+
+  <!-- ==================== СМЕТА (калькулятор) ==================== -->
+  <section class="view" id="v-смета">
+    <p class="eyebrow">Смета · живой расчёт</p>
+    <h1 class="page-h">Калькулятор</h1>
+    <p class="sub" style="margin-bottom:18px">Меняйте размеры, цены и состав — объёмы и суммы пересчитываются на лету. Значения сохраняются в браузере.</p>
+    <div id="calc-app"></div>
+  </section>
+
+  <!-- ==================== ДОКУМЕНТЫ ==================== -->
+  <section class="view" id="v-документы">
+    <p class="eyebrow">Проект · разделы</p>
+    <h1 class="page-h">Документы</h1>
+    <div class="docs-wrap">
+      <nav class="reestr">
+        <div class="idx-h">Реестр листов</div>
+        <div id="doclinks"></div>
+      </nav>
+      <article id="doc"><p class="docmiss">Выберите раздел в реестре слева.</p></article>
+    </div>
+  </section>
+
+</main>
 
 <div class="foot">
   Рабочая оценка без чертежей конструктора · ±15% · для разрешения нужен проект инженера (сейсмика).
@@ -152,7 +193,8 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
-<script src="assets/app.js"></script>
-<script type="module" src="assets/model3d.js"></script>
+<script src="assets/calc.js?v=6"></script>
+<script src="assets/app.js?v=6"></script>
+<script type="module" src="assets/model3d.js?v=6"></script>
 </body>
 </html>

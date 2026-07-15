@@ -6,14 +6,24 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const mount = document.getElementById('model3d');
-if (mount) init(mount);
+if (mount) {
+  let started = false;
+  const tryStart = () => {
+    if (!started && mount.clientWidth > 0 && mount.offsetParent !== null) {
+      started = true; io.disconnect(); init(mount);
+    }
+  };
+  const io = new IntersectionObserver(() => tryStart());
+  io.observe(mount);
+  window.addEventListener('m3d:show', () => setTimeout(tryStart, 60));
+}
 
 function init(mount) {
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let W = mount.clientWidth, H = mount.clientHeight;
 
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color('#e7edf0');
+  scene.background = new THREE.Color('#0b0d10');
 
   const camera = new THREE.PerspectiveCamera(40, W / H, 0.1, 500);
   camera.position.set(18, 15, 22);
@@ -37,8 +47,8 @@ function init(mount) {
   controls.addEventListener('start', () => { controls.autoRotate = false; });
 
   // ---- Свет ----
-  scene.add(new THREE.HemisphereLight(0xffffff, 0xc4cabd, 1.0));
-  scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+  scene.add(new THREE.HemisphereLight(0xdfe6ff, 0x20242a, 1.05));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.35));
   const sun = new THREE.DirectionalLight(0xfff3e4, 1.15);
   sun.position.set(16, 26, 13);
   sun.castShadow = true;
@@ -205,11 +215,11 @@ function init(mount) {
 
   // --- Участок ---
   const grass = new THREE.Mesh(new THREE.PlaneGeometry(70, 70),
-    new THREE.MeshStandardMaterial({ color: 0xbccbad, roughness: 1 }));
+    new THREE.MeshStandardMaterial({ color: 0x39422f, roughness: 1 }));
   grass.rotation.x = -Math.PI / 2; grass.position.y = -0.3; grass.receiveShadow = true;
   G.site.add(grass);
   const drive = new THREE.Mesh(new THREE.PlaneGeometry(15, 9),
-    new THREE.MeshStandardMaterial({ color: 0xb7bbb4, roughness: 1 }));
+    new THREE.MeshStandardMaterial({ color: 0x23272c, roughness: 1 }));
   drive.rotation.x = -Math.PI / 2; drive.position.set(0, -0.29, 11.5); drive.receiveShadow = true;
   G.site.add(drive);
   // пара деревьев для контекста
@@ -254,10 +264,17 @@ function init(mount) {
   setView('Дом');
 
   // ======================= ЦИКЛ =======================
-  function tick() { controls.update(); renderer.render(scene, camera); requestAnimationFrame(tick); }
+  function fit() {
+    var w = mount.clientWidth, h = mount.clientHeight;
+    if (w && h && (w !== W || h !== H)) {
+      W = w; H = h; camera.aspect = w / h; camera.updateProjectionMatrix(); renderer.setSize(w, h);
+    }
+  }
+  function tick() {
+    requestAnimationFrame(tick);
+    if (!mount.clientWidth || !mount.clientHeight) return;  // скрыт — не рисуем
+    fit(); controls.update(); renderer.render(scene, camera);
+  }
   tick();
-  window.addEventListener('resize', () => {
-    W = mount.clientWidth; H = mount.clientHeight;
-    camera.aspect = W / H; camera.updateProjectionMatrix(); renderer.setSize(W, H);
-  });
+  window.addEventListener('resize', fit);
 }
