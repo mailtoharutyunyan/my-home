@@ -104,8 +104,53 @@
     else { showView('обзор'); }
   }
 
+  // ---- Лайтбокс галереи ----
+  function initLightbox() {
+    var links = Array.prototype.slice.call(document.querySelectorAll('.gallery a'));
+    if (!links.length) return;
+    var items = links.map(function (a) {
+      var cap = a.querySelector('.cap');
+      return { src: a.getAttribute('href'), cap: cap ? cap.innerHTML : '' };
+    });
+    var lb = document.createElement('div');
+    lb.className = 'lb'; lb.hidden = true;
+    lb.innerHTML =
+      '<div class="lb-count"></div>'
+      + '<button class="lb-close" aria-label="Закрыть">✕</button>'
+      + '<button class="lb-prev" aria-label="Назад">‹</button>'
+      + '<img class="lb-img" alt="">'
+      + '<button class="lb-next" aria-label="Вперёд">›</button>'
+      + '<div class="lb-cap"></div>';
+    document.body.appendChild(lb);
+    var img = lb.querySelector('.lb-img'), cap = lb.querySelector('.lb-cap'),
+        cnt = lb.querySelector('.lb-count');
+    var cur = 0;
+    function show(i) {
+      cur = (i + items.length) % items.length;
+      img.src = items[cur].src; cap.innerHTML = items[cur].cap;
+      cnt.textContent = (cur + 1) + ' / ' + items.length;
+    }
+    function open(i) { show(i); lb.hidden = false; document.body.style.overflow = 'hidden'; }
+    function close() { lb.hidden = true; document.body.style.overflow = ''; }
+
+    links.forEach(function (a, i) {
+      a.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+    });
+    lb.querySelector('.lb-close').addEventListener('click', close);
+    lb.querySelector('.lb-prev').addEventListener('click', function () { show(cur - 1); });
+    lb.querySelector('.lb-next').addEventListener('click', function () { show(cur + 1); });
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(cur - 1);
+      else if (e.key === 'ArrowRight') show(cur + 1);
+    });
+  }
+
   // ---- Init ----
   buildDocs();
+  initLightbox();
   window.addEventListener('hashchange', route);
   route();
 })();
