@@ -5,10 +5,10 @@
 
 ## 🌐 Визуализация (GitHub Pages)
 
-Интерактивная страница со схемами и сметой: **[dom-proekt/index.html](dom-proekt/index.html)**
+Интерактивная страница со схемами и сметой: **[index.html](index.html)**
 
-После включения Pages будет доступна по адресу:
-`https://mailtoharutyunyan.github.io/my-home/dom-proekt/`
+После включения Pages доступна по адресу:
+`https://mailtoharutyunyan.github.io/my-home/`
 
 ## 📁 Документы
 
