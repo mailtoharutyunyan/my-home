@@ -37,9 +37,32 @@
     { id: 'fac',   name: 'Фасад (утепление + облицовка)',        base: 'extWall', price: 12000, on: 1 },
     { id: 'elec',  name: 'Электрика',                            base: 'useful', price: 6000, on: 1 },
     { id: 'plumb', name: 'Сантехника',                           base: 'useful', price: 5000, on: 1 },
-    { id: 'heat',  name: 'Отопление',                            base: 'useful', price: 7000, on: 1 },
+    { id: 'heat',  name: 'Отопление (котёл/тёплый пол)',        base: 'useful', price: 7000, on: 1 },
+    { id: 'hpump', name: 'Тепловой насос (воздух-вода)',        base: 'fixed', qty: 1, unit: 'компл', price: 2500000, on: 0 },
+    { id: 'solar', name: 'Солнечные панели (фотовольтаика)',    base: 'fixed', qty: 5, unit: 'кВт', price: 350000, on: 0 },
     { id: 'fin',   name: 'Финишная отделка',                     base: 'useful', price: 20000, on: 1 }
   ];
+
+  // благоустройство участка (все — fixed qty)
+  var SITE = [
+    { id: 'fence',  name: 'Забор по периметру участка', qty: 90,  unit: 'пог.м', price: 15000, on: 1 },
+    { id: 'gate',   name: 'Ворота въездные',            qty: 1,   unit: 'шт',    price: 200000, on: 1 },
+    { id: 'septic', name: 'Септик / локальная канализация', qty: 1, unit: 'компл', price: 700000, on: 1 },
+    { id: 'blind',  name: 'Отмостка вокруг дома',        qty: 54,  unit: 'пог.м', price: 8000, on: 1 },
+    { id: 'pave',   name: 'Мощение двора / дорожки',     qty: 100, unit: 'м²',    price: 12000, on: 1 }
+  ];
+
+  // пресеты отделки (абсолютные значения поверх дефолтов FIN)
+  var PRESETS = {
+    'Эконом':   { vitr: { on: 0 }, win: { price: 35000 }, dfront: { price: 90000 }, dint: { price: 35000 },
+                  rough: { price: 9000 }, fac: { price: 9000 }, elec: { price: 4500 }, plumb: { price: 4000 },
+                  heat: { price: 5000 }, fin: { price: 11000 } },
+    'Стандарт': {},
+    'Премиум':  { vitr: { on: 1, qty: 60, price: 95000 }, win: { price: 60000 }, dfront: { price: 450000 },
+                  dint: { price: 120000 }, rough: { price: 15000 }, fac: { price: 18000 }, elec: { price: 9000 },
+                  plumb: { price: 8000 }, heat: { price: 11000 }, fin: { price: 35000 },
+                  hpump: { on: 1 }, solar: { on: 1, qty: 8 } }
+  };
 
   var saved = {};
   try { saved = JSON.parse(localStorage.getItem(LS)) || {}; } catch (e) {}
@@ -53,12 +76,18 @@
     V.fin[f.id] = { price: s.price != null ? s.price : f.price, on: s.on != null ? s.on : f.on,
                     qty: s.qty != null ? s.qty : (f.qty || 0) };
   });
+  V.site = {};
+  SITE.forEach(function (f) {
+    var s = (saved.site && saved.site[f.id]) || {};
+    V.site[f.id] = { price: s.price != null ? s.price : f.price, on: s.on != null ? s.on : f.on,
+                     qty: s.qty != null ? s.qty : (f.qty || 0) };
+  });
 
   var fmt = function (n) { return Math.round(n).toLocaleString('ru-RU'); };
   var f1 = function (n) { return (Math.round(n * 10) / 10).toLocaleString('ru-RU'); };
 
   // ---------- вычисления ----------
-  function compute(d, p, fin) {
+  function compute(d, p, fin, site) {
     var footprint = d.L * d.B;
     var Htot = d.n * d.H;
     var upper = Math.max(0, (d.n - 1) * footprint - d.hall);
@@ -144,11 +173,18 @@
     });
     var finish = finRows.reduce(function (s, r) { return s + r.sum; }, 0);
 
+    var siteRows = SITE.map(function (f) {
+      var st = site[f.id];
+      return { id: f.id, qty: st.qty, sum: st.on ? st.qty * st.price : 0 };
+    });
+    var siteTotal = siteRows.reduce(function (s, r) { return s + r.sum; }, 0);
+
     return {
       footprint: footprint, useful: useful, laborArea: laborArea, Htot: Htot, extArea: extArea, bsmt: bsmt,
       q: q, c: c, misc: misc, materials: materials, labor: labor, box: box,
       earthRows: earthRows, earthTotal: earthTotal, bd: bd,
-      finRows: finRows, finish: finish, turnkey: box + finish
+      finRows: finRows, finish: finish, siteRows: siteRows, siteTotal: siteTotal,
+      turnkey: box + finish + siteTotal
     };
   }
 
@@ -178,6 +214,15 @@
         + '<td class="r auto">' + qtyCell + '</td>'
         + '<td class="r"><input class="price" type="number" step="any" min="0" data-path="fin.' + f.id + '.price" value="' + st.price + '"></td>'
         + '<td class="r"><span id="fs-' + f.id + '">0</span></td></tr>';
+    }).join('');
+
+    var siteHTML = SITE.map(function (f) {
+      var st = V.site[f.id];
+      return '<tr id="sr-' + f.id + '">'
+        + '<td><input class="chk" type="checkbox" data-path="site.' + f.id + '.on"' + (st.on ? ' checked' : '') + '> ' + f.name + '</td>'
+        + '<td class="r auto"><input class="qty" type="number" step="any" min="0" data-path="site.' + f.id + '.qty" value="' + st.qty + '"> <span class="u">' + f.unit + '</span></td>'
+        + '<td class="r"><input class="price" type="number" step="any" min="0" data-path="site.' + f.id + '.price" value="' + st.price + '"></td>'
+        + '<td class="r"><span id="ss-' + f.id + '">0</span></td></tr>';
     }).join('');
 
     root.innerHTML =
@@ -232,15 +277,27 @@
 
       + '<section class="block"><h2>Отделка, инженерия, окна, двери <span class="tag">FIN</span></h2>'
       + '<p class="sub">Галочка — включить в «под ключ». Витражи/окна — м², двери — шт. Нормы правьте под себя.</p>'
+      + '<div class="calc-actions" style="margin:0 0 14px"><span class="rate">Пресет уровня отделки:</span>'
+      + '<button class="reset" data-preset="Эконом">Эконом</button>'
+      + '<button class="reset" data-preset="Стандарт">Стандарт</button>'
+      + '<button class="reset" data-preset="Премиум">Премиум</button></div>'
       + '<table class="calc"><thead><tr><th>Позиция</th><th>Кол-во</th><th>Цена за ед., ֏</th><th>Сумма, ֏</th></tr></thead><tbody>'
       + finRows
       + '<tr class="sub"><td colspan="3">Отделка + инженерия, итого</td><td class="r"><span id="t-finish">0</span></td></tr>'
+      + '</tbody></table></section>'
+
+      + '<section class="block"><h2>Благоустройство участка <span class="tag">УЧАСТОК</span></h2>'
+      + '<p class="sub">Забор, ворота, септик, отмостка, двор. Входит в «под ключ».</p>'
+      + '<table class="calc"><thead><tr><th>Позиция</th><th>Кол-во</th><th>Цена за ед., ֏</th><th>Сумма, ֏</th></tr></thead><tbody>'
+      + siteHTML
+      + '<tr class="sub"><td colspan="3">Благоустройство, итого</td><td class="r"><span id="t-site">0</span></td></tr>'
       + '</tbody></table></section>'
 
       + '<section class="block"><h2>Итог <span class="tag">TOTAL</span></h2>'
       + '<div class="totrow">'
       + '<div class="tot"><div class="k">Коробка</div><div class="v"><span id="t-box2">0</span></div></div>'
       + '<div class="tot"><div class="k">+ Отделка/инженерия</div><div class="v"><span id="t-finish2">0</span></div></div>'
+      + '<div class="tot"><div class="k">+ Благоустройство</div><div class="v"><span id="t-site2">0</span></div></div>'
       + '<div class="tot big key"><div class="k">ПОД КЛЮЧ</div><div class="v"><span id="t-turnkey">0</span> <span class="cur">֏</span></div></div>'
       + '</div>'
       + '<div class="totrow"><div class="tot"><div class="k">Коробка ≈ USD</div><div class="v">$<span id="t-usd">0</span></div></div>'
@@ -268,7 +325,7 @@
 
   function refresh() {
     read();
-    var r = compute(V.dims, V.prices, V.fin);
+    var r = compute(V.dims, V.prices, V.fin, V.site);
     MAT.forEach(function (m) { set('q-' + m.id, f1(r.q[m.id])); set('s-' + m.id, fmt(r.c[m.id])); });
     set('s-misc', fmt(r.misc)); set('s-materials', fmt(r.materials));
     // земляные
@@ -290,7 +347,14 @@
       var fq = document.getElementById('fq-' + row.id); if (fq) fq.textContent = fmt(row.qty);
       var tr = document.getElementById('fr-' + row.id); if (tr) tr.classList.toggle('off', !V.fin[row.id].on);
     });
-    set('t-finish', fmt(r.finish)); set('t-finish2', fmt(r.finish)); set('t-turnkey', fmt(r.turnkey));
+    set('t-finish', fmt(r.finish)); set('t-finish2', fmt(r.finish));
+    // благоустройство
+    r.siteRows.forEach(function (row) {
+      set('ss-' + row.id, fmt(row.sum));
+      var tr = document.getElementById('sr-' + row.id); if (tr) tr.classList.toggle('off', !V.site[row.id].on);
+    });
+    set('t-site', fmt(r.siteTotal)); set('t-site2', fmt(r.siteTotal));
+    set('t-turnkey', fmt(r.turnkey));
     set('t-usd', fmt(r.box / (V.prices.rate || 385)));
     set('t-perm2', fmt(r.box / (r.useful || 1)));
     set('t-perm2t', fmt(r.turnkey / (r.useful || 1)));
@@ -303,7 +367,7 @@
   }
 
   function csv() {
-    var r = compute(V.dims, V.prices, V.fin);
+    var r = compute(V.dims, V.prices, V.fin, V.site);
     var rows = [['Раздел', 'Позиция', 'Кол-во', 'Ед', 'Цена', 'Сумма']];
     r.earthRows.forEach(function (x) { rows.push(['Земляные', x[0], Math.round(x[1]), x[2], x[3], Math.round(x[4])]); });
     MAT.forEach(function (m) { rows.push(['Материалы', m.name, Math.round(r.q[m.id] * 10) / 10, m.unit, V.prices[m.pk], Math.round(r.c[m.id])]); });
@@ -313,6 +377,10 @@
     FIN.forEach(function (f) {
       var row = r.finRows.filter(function (x) { return x.id === f.id; })[0];
       rows.push(['Отделка', f.name + (V.fin[f.id].on ? '' : ' (выкл)'), Math.round(row.qty), f.unit || 'м²', V.fin[f.id].price, Math.round(row.sum)]);
+    });
+    SITE.forEach(function (f) {
+      var row = r.siteRows.filter(function (x) { return x.id === f.id; })[0];
+      rows.push(['Участок', f.name + (V.site[f.id].on ? '' : ' (выкл)'), Math.round(row.qty), f.unit, V.site[f.id].price, Math.round(row.sum)]);
     });
     rows.push(['Итог', 'ПОД КЛЮЧ', '', '', '', Math.round(r.turnkey)]);
     var text = '﻿' + rows.map(function (r) { return r.join(';'); }).join('\n');
@@ -326,11 +394,22 @@
     V.dims = Object.assign({}, DEFAULTS.dims);
     V.prices = Object.assign({}, DEFAULTS.prices);
     FIN.forEach(function (f) { V.fin[f.id] = { price: f.price, on: f.on, qty: f.qty || 0 }; });
+    SITE.forEach(function (f) { V.site[f.id] = { price: f.price, on: f.on, qty: f.qty || 0 }; });
+    build(); wire(); refresh();
+  }
+  function applyPreset(name) {
+    FIN.forEach(function (f) { V.fin[f.id] = { price: f.price, on: f.on, qty: f.qty || 0 }; });
+    var pr = PRESETS[name] || {};
+    Object.keys(pr).forEach(function (id) { if (V.fin[id]) Object.assign(V.fin[id], pr[id]); });
     build(); wire(); refresh();
   }
   function wire() {
     root.addEventListener('input', refresh);
     root.addEventListener('change', refresh);
+    root.addEventListener('click', function (e) {
+      var p = e.target && e.target.getAttribute && e.target.getAttribute('data-preset');
+      if (p) applyPreset(p);
+    });
     document.getElementById('c-reset').addEventListener('click', reset);
     document.getElementById('c-csv').addEventListener('click', csv);
     document.getElementById('c-pdf').addEventListener('click', function () { window.print(); });
