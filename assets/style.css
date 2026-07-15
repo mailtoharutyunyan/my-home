@@ -188,6 +188,8 @@ table.calc input.qty,table.calc input.price{width:100px;text-align:right}
 table.calc tr.sub td{background:var(--panel2);font-weight:600}
 table.calc tr.off{opacity:.4}
 .chk{width:16px;height:16px;accent-color:var(--accent)}
+.chkline{display:flex;gap:6px;align-items:center;font-family:var(--body);font-size:13px;
+  color:var(--ink);text-transform:none;letter-spacing:0}
 .calc-actions{margin-top:18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 button.reset{font-family:var(--mono);font-size:12px;padding:10px 16px;border:1px solid var(--line2);
   background:var(--bg2);color:var(--ink);border-radius:8px;cursor:pointer;transition:.15s}
