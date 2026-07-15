@@ -9,6 +9,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
 </head>
 <body>
 
@@ -67,6 +70,47 @@
         </div>
       </section>
 
+      <!-- RENDERS GALLERY -->
+      <section class="block">
+        <h2>Визуализация <span class="tag">AI-РЕНДЕР</span></h2>
+        <p class="sub">Фотореалистичные образы по проекту (сгенерированы нейросетью). Кликните — открыть в полном размере.</p>
+        <div class="gallery">
+          <a class="span2" href="images/presentation-board.png" target="_blank" rel="noopener">
+            <img src="images/presentation-board.png" alt="Сводный лист проекта">
+            <span class="cap"><b>Сводный лист</b> · экстерьер, планы, интерьеры</span></a>
+          <a href="images/exterior-sunset.jpeg" target="_blank" rel="noopener">
+            <img src="images/exterior-sunset.jpeg" alt="Экстерьер на закате">
+            <span class="cap"><b>Экстерьер</b> · закат, вид со двора</span></a>
+          <a href="images/exterior-front-day.png" target="_blank" rel="noopener">
+            <img src="images/exterior-front-day.png" alt="Фасад днём">
+            <span class="cap"><b>Фасад</b> · дневной свет</span></a>
+          <a href="images/interior-studio.jpeg" target="_blank" rel="noopener">
+            <img src="images/interior-studio.jpeg" alt="Зал-студия с кухней">
+            <span class="cap"><b>Зал-студия</b> · кухня, галерея, двор</span></a>
+          <a href="images/interior-zal.png" target="_blank" rel="noopener">
+            <img src="images/interior-zal.png" alt="Двусветный зал с камином">
+            <span class="cap"><b>Зал</b> · камин, двусвет, лестница</span></a>
+          <a href="images/exterior-elevation.jpeg" target="_blank" rel="noopener">
+            <img src="images/exterior-elevation.jpeg" alt="Фронтальный фасад">
+            <span class="cap"><b>Фронтальный фасад</b> · остекление зала</span></a>
+        </div>
+        <p class="hint">Промпты для генерации своих ракурсов — в разделе «AI 3D-рендер» (лист 13).</p>
+      </section>
+
+      <!-- 3D MODEL -->
+      <section class="block">
+        <h2>3D-модель <span class="tag">МАССИНГ</span></h2>
+        <p class="sub">Объём точно по размерам (14 × 13 × 6 м). Тяните — вращать, колесо — зум. Скриншот годится как точный референс для AI-рендера.</p>
+        <div id="model3d">
+          <div class="m3d-legend">
+            <span><i style="background:#eef1ec;border:1px solid #8a9299"></i>стены</span><br>
+            <span><i style="background:#8bb7e6"></i>зал · стекло</span><br>
+            <span><i style="background:#8a9299"></i>плиты</span>
+          </div>
+          <div class="m3d-hint">🖱 тяните — вращать · колесо — зум</div>
+        </div>
+      </section>
+
       <!-- CALCULATOR -->
       <section class="block">
         <h2>Калькулятор сметы <span class="tag">LIVE</span></h2>
@@ -109,5 +153,6 @@
 
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="assets/app.js"></script>
+<script type="module" src="assets/model3d.js"></script>
 </body>
 </html>
