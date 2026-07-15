@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="720" height="470" fill="#ffffff"/>
+  <rect x="10" y="10" width="700" height="450" fill="none" stroke="#8a9299" stroke-width="1.5"/>
+
+  <!-- ================= 1 ЭТАЖ (front = bottom) ================= -->
+  <text x="200" y="46" fill="#14202b" font-size="13" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">1 ЭТАЖ · 182 м²</text>
+  <rect x="60" y="58" width="280" height="272" fill="#f5f6f2" stroke="#14202b" stroke-width="2.5"/>
+
+  <!-- вертикальный раздел: левая зона (зал+кухня) | правая колонна -->
+  <line x1="245" y1="70" x2="245" y2="318" stroke="#8a9299" stroke-width="1"/>
+
+  <!-- кухня-студия (сверху, H 3 м) -->
+  <rect x="72" y="70" width="173" height="80" fill="#eef1ec" stroke="#8a9299" stroke-width="1"/>
+  <text x="158" y="102" fill="#14202b" font-size="11.5" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">КУХНЯ</text>
+  <text x="158" y="118" fill="#5b6b57" font-size="9.5" text-anchor="middle" font-family="Inter, sans-serif">студия · H 3 м</text>
+
+  <!-- раздвижная перегородка кухня/зал -->
+  <line x1="72" y1="150" x2="245" y2="150" stroke="#c8532a" stroke-width="2" stroke-dasharray="10 4"/>
+  <text x="158" y="144" fill="#c8532a" font-size="9" text-anchor="middle">◄ раздвижная перегородка ►</text>
+
+  <!-- зал у фасада (10×8=80, двусветный) -->
+  <rect x="72" y="150" width="173" height="168" fill="#f6e2d8" stroke="#c8532a" stroke-width="2"/>
+  <text x="158" y="224" fill="#c8532a" font-size="14" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">ЗАЛ</text>
+  <text x="158" y="244" fill="#c8532a" font-size="10.5" text-anchor="middle">10×8 = 80 м² · H 6 м</text>
+  <text x="158" y="260" fill="#5b6b57" font-size="9.5" text-anchor="middle" font-family="Inter, sans-serif">студия с кухней</text>
+  <line x1="80" y1="318" x2="237" y2="318" stroke="#1f5fbf" stroke-width="3"/>
+  <text x="158" y="308" fill="#1f5fbf" font-size="9.5" text-anchor="middle">панорамные окна на двор</text>
+
+  <!-- правая колонна: гостевой с/у, лестница, мастер-спальня -->
+  <line x1="245" y1="120" x2="328" y2="120" stroke="#8a9299" stroke-width="1"/>
+  <line x1="245" y1="185" x2="328" y2="185" stroke="#8a9299" stroke-width="1"/>
+  <text x="286" y="92" fill="#14202b" font-size="10" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">гостевой</text>
+  <text x="286" y="106" fill="#14202b" font-size="10" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">С/У</text>
+  <text x="286" y="150" fill="#5b6b57" font-size="10" text-anchor="middle" font-family="Inter, sans-serif">лестница</text>
+  <text x="286" y="167" fill="#5b6b57" font-size="9" text-anchor="middle" font-family="Inter, sans-serif">+ вход</text>
+  <text x="286" y="245" fill="#14202b" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">МАСТЕР-</text>
+  <text x="286" y="259" fill="#14202b" font-size="10.5" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">СПАЛЬНЯ</text>
+  <text x="286" y="274" fill="#5b6b57" font-size="9" text-anchor="middle" font-family="Inter, sans-serif">с гардеробной</text>
+
+  <!-- ================= 2 ЭТАЖ ================= -->
+  <text x="520" y="46" fill="#14202b" font-size="13" font-weight="700" text-anchor="middle" font-family="'Space Grotesk', sans-serif">2 ЭТАЖ · ≈102 м²</text>
+  <rect x="380" y="58" width="280" height="272" fill="#f5f6f2" stroke="#14202b" stroke-width="2.5"/>
+  <rect x="392" y="70" width="173" height="80" fill="#eef1ec" stroke="#8a9299" stroke-width="1"/>
+  <text x="478" y="114" fill="#5b6b57" font-size="11" text-anchor="middle" font-family="Inter, sans-serif">спальня 2</text>
+  <rect x="392" y="150" width="173" height="168" fill="none" stroke="#c8532a" stroke-width="2" stroke-dasharray="6 5"/>
+  <text x="478" y="228" fill="#c8532a" font-size="11" text-anchor="middle">проём зала</text>
+  <text x="478" y="246" fill="#c8532a" font-size="11" text-anchor="middle">(пустота, 80 м²)</text>
+  <text x="478" y="300" fill="#1f5fbf" font-size="10" text-anchor="middle">↑ галерея на зал</text>
+  <line x1="565" y1="70" x2="565" y2="318" stroke="#8a9299" stroke-width="1"/>
+  <line x1="565" y1="185" x2="648" y2="185" stroke="#8a9299" stroke-width="1"/>
+  <text x="606" y="120" fill="#5b6b57" font-size="11" text-anchor="middle" font-family="Inter, sans-serif">спальня 1</text>
+  <text x="606" y="250" fill="#5b6b57" font-size="11" text-anchor="middle" font-family="Inter, sans-serif">с/у · холл</text>
+
+  <!-- фасад/двор -->
+  <text x="360" y="352" fill="#c8532a" font-size="12" text-anchor="middle" font-weight="700" font-family="'Space Grotesk', sans-serif">▼ ФАСАД · зал и кухня-студия смотрят на двор ▼</text>
+
+  <!-- штамп -->
+  <line x1="10" y1="414" x2="710" y2="414" stroke="#8a9299"/>
+  <text x="24" y="438" fill="#14202b" font-size="13" font-weight="700" font-family="'Space Grotesk', sans-serif">ПЛАНЫ ЭТАЖЕЙ</text>
+  <text x="270" y="438" fill="#8a9299" font-size="10">1 эт.: зал+кухня студия, мастер-спальня, гостевой с/у</text>
+  <text x="696" y="438" fill="#c8532a" font-size="12" text-anchor="end">М 1:100 · Л.02</text>
+</svg>

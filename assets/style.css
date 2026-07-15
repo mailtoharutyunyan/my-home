@@ -1,0 +1,146 @@
+/* Рабочий проект · Дом 13×14 — стиль «чертёжный лист» */
+:root{
+  --sheet:#f5f6f2; --grid:#e2e6e0; --grid2:#d3d9d1;
+  --ink:#14202b; --muted:#5b6b57; --line:#c4ccc2;
+  --blue:#1f5fbf; --rebar:#c8532a; --concrete:#8a9299; --sand:#c9a24b; --paper:#ffffff;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --disp:'Space Grotesk',sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--sheet);
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px),
+    linear-gradient(var(--grid2) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid2) 1px,transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px;
+  line-height:1.55}
+
+/* ===== Title block header ===== */
+header{background:var(--ink);color:var(--sheet);border-bottom:3px solid var(--rebar)}
+.tblock{max-width:1180px;margin:0 auto;display:grid;
+  grid-template-columns:1fr auto auto auto;gap:0;align-items:stretch}
+.tblock>div{padding:14px 20px;border-left:1px solid #2c3a46}
+.tblock>div:first-child{border-left:none}
+.tblock .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#7f8f9b}
+.tblock .val{font-family:var(--disp);font-weight:700;font-size:15px;margin-top:2px}
+.tblock .val.big{font-size:19px}
+.tblock .val .accent{color:var(--rebar)}
+
+/* ===== Layout ===== */
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px 1fr;
+  gap:0;align-items:start}
+nav.index{position:sticky;top:0;align-self:start;padding:22px 14px;
+  border-right:1px solid var(--line);min-height:100vh}
+nav .idx-h{font-family:var(--mono);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 8px 10px}
+nav a{display:flex;gap:10px;align-items:baseline;text-decoration:none;color:var(--ink);
+  padding:6px 8px;border-radius:5px;font-size:13.5px}
+nav a .no{font-family:var(--mono);font-size:11px;color:var(--concrete);min-width:20px}
+nav a:hover{background:#e9ede7}
+nav a.active{background:var(--ink);color:var(--sheet)}
+nav a.active .no{color:var(--rebar)}
+nav .grp{margin:14px 8px 6px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--concrete)}
+
+main{padding:28px 34px 80px;min-width:0}
+
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--rebar);margin:0 0 8px}
+h1.hero{font-family:var(--disp);font-weight:700;font-size:40px;line-height:1.05;
+  margin:0 0 10px;letter-spacing:-.01em}
+.lede{font-size:16px;color:var(--muted);max-width:60ch;margin:0 0 26px}
+
+section.block{background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  padding:22px 24px;margin:0 0 22px}
+section.block>h2{font-family:var(--disp);font-weight:700;font-size:20px;margin:0 0 2px;
+  display:flex;align-items:baseline;gap:12px}
+section.block>h2 .tag{font-family:var(--mono);font-size:11px;color:var(--rebar);
+  letter-spacing:.1em}
+section.block>.sub{color:var(--muted);font-size:13.5px;margin:0 0 18px}
+
+/* ===== Drawings ===== */
+.plates{display:grid;grid-template-columns:1fr;gap:16px}
+figure.plate{margin:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;
+  background:var(--paper)}
+figure.plate img{display:block;width:100%;height:auto;background:var(--paper)}
+figure.plate figcaption{font-family:var(--mono);font-size:11px;color:var(--muted);
+  padding:8px 12px;border-top:1px solid var(--line);display:flex;justify-content:space-between}
+
+/* ===== Calculator ===== */
+.calc-head{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:flex-end;margin-bottom:18px}
+.bigtotal{font-family:var(--disp);font-weight:700;font-size:44px;line-height:1;
+  color:var(--ink);font-variant-numeric:tabular-nums}
+.bigtotal .cur{color:var(--rebar);font-size:26px}
+.subtotal{font-family:var(--mono);font-size:13px;color:var(--muted)}
+table.calc{width:100%;border-collapse:collapse;font-size:14px}
+table.calc th{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--muted);text-align:right;padding:8px 10px;
+  border-bottom:1.5px solid var(--ink)}
+table.calc th:first-child{text-align:left}
+table.calc td{padding:7px 10px;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+table.calc td:first-child{font-family:var(--body)}
+table.calc td.r{text-align:right;font-family:var(--mono)}
+table.calc td .u{color:var(--concrete);font-size:11px;font-family:var(--mono)}
+table.calc input{width:92px;text-align:right;font-family:var(--mono);font-size:13px;
+  padding:5px 7px;border:1px solid var(--line);border-radius:4px;background:var(--sheet);color:var(--ink)}
+table.calc input:focus{outline:2px solid var(--blue);outline-offset:0;border-color:var(--blue)}
+table.calc tr.sub td{background:#eef1ec;font-weight:600}
+table.calc tr.grand td{border-top:2px solid var(--ink);border-bottom:none;
+  font-family:var(--disp);font-weight:700;font-size:16px;padding-top:12px}
+.rowsum{color:var(--ink);font-weight:500}
+.bar{height:6px;border-radius:3px;margin-top:5px;background:var(--concrete);transition:width .25s ease}
+.calc-actions{margin-top:16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+button.reset{font-family:var(--mono);font-size:12px;padding:8px 14px;border:1px solid var(--ink);
+  background:var(--paper);color:var(--ink);border-radius:4px;cursor:pointer}
+button.reset:hover{background:var(--ink);color:var(--sheet)}
+.rate{font-family:var(--mono);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.rate input{width:64px;text-align:right;font-family:var(--mono);padding:4px 6px;
+  border:1px solid var(--line);border-radius:4px;background:var(--sheet);color:var(--ink)}
+.hint{font-size:12px;color:var(--muted);margin-top:14px;font-style:italic}
+
+/* ===== Rendered markdown ===== */
+#doc{background:var(--paper);border:1px solid var(--line);border-radius:4px;
+  padding:30px 40px;display:none}
+#doc.on{display:block}
+#doc h1{font-family:var(--disp);font-size:28px;margin:0 0 6px}
+#doc h2{font-family:var(--disp);font-size:20px;margin:26px 0 8px;
+  padding-bottom:6px;border-bottom:1px solid var(--line)}
+#doc h3{font-family:var(--disp);font-size:16px;margin:18px 0 6px}
+#doc p,#doc li{font-size:14.5px}
+#doc a{color:var(--blue);text-decoration:none;border-bottom:1px solid #b9cdec}
+#doc a:hover{border-bottom-color:var(--blue)}
+#doc table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+#doc th,#doc td{border:1px solid var(--line);padding:7px 10px;text-align:left}
+#doc th{background:#eef1ec;font-family:var(--mono);font-size:11px;
+  text-transform:uppercase;letter-spacing:.05em}
+#doc td{font-variant-numeric:tabular-nums}
+#doc code{font-family:var(--mono);font-size:12.5px;background:#eef1ec;padding:1px 6px;border-radius:4px}
+#doc pre{background:var(--ink);color:#dfe6ea;padding:16px 18px;border-radius:6px;
+  overflow:auto;font-size:12px;line-height:1.45}
+#doc pre code{background:none;color:inherit;padding:0}
+#doc blockquote{border-left:3px solid var(--rebar);margin:14px 0;padding:2px 16px;
+  color:var(--muted);background:#faf6f2}
+.docmiss{color:var(--muted);font-size:14px}
+
+.foot{max-width:1180px;margin:0 auto;padding:24px 34px;color:var(--muted);
+  font-size:12px;font-family:var(--mono);border-top:1px solid var(--line)}
+
+.menutoggle{display:none}
+@media(max-width:860px){
+  .shell{grid-template-columns:1fr}
+  nav.index{position:static;min-height:0;border-right:none;border-bottom:1px solid var(--line);display:none}
+  nav.index.show{display:block}
+  .menutoggle{display:inline-block;margin:14px 0 0 34px;font-family:var(--mono);
+    font-size:12px;padding:8px 14px;border:1px solid var(--ink);background:var(--paper);
+    border-radius:4px;cursor:pointer}
+  .tblock{grid-template-columns:1fr 1fr}
+  .tblock>div:nth-child(3),.tblock>div:nth-child(4){border-top:1px solid #2c3a46}
+  h1.hero{font-size:30px}
+  main{padding:22px 18px 60px}
+  #doc{padding:22px 20px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" font-family="'JetBrains Mono', ui-monospace, monospace">
+  <rect width="640" height="400" fill="#ffffff"/>
+  <rect x="10" y="10" width="620" height="380" fill="none" stroke="#8a9299" stroke-width="1.5"/>
+
+  <text x="28" y="48" fill="#14202b" font-size="16" font-weight="700" font-family="'Space Grotesk', sans-serif">СПЕЦИФИКАЦИЯ ЗАТРАТ</text>
+  <text x="28" y="68" fill="#8a9299" font-size="12" font-family="Inter, sans-serif">серая коробка · материалы + работа</text>
+
+  <!-- track: x=210 width=350, max 6.36 -->
+  <g>
+    <text x="28" y="108" fill="#14202b" font-size="12">Бетон · 159 м³</text>
+    <rect x="210" y="94" width="350" height="20" fill="#eef0ed"/>
+    <rect x="210" y="94" width="350" height="20" fill="#8a9299"/>
+    <text x="570" y="108" fill="#14202b" font-size="12">6,36</text>
+  </g>
+  <g>
+    <text x="28" y="146" fill="#14202b" font-size="12">Арматура · 15,3 т</text>
+    <rect x="210" y="132" width="350" height="20" fill="#eef0ed"/>
+    <rect x="210" y="132" width="295" height="20" fill="#c8532a"/>
+    <text x="570" y="146" fill="#14202b" font-size="12">5,36</text>
+  </g>
+  <g>
+    <text x="28" y="184" fill="#14202b" font-size="12">Газоблок · 85 м³</text>
+    <rect x="210" y="170" width="350" height="20" fill="#eef0ed"/>
+    <rect x="210" y="170" width="196" height="20" fill="#c9a24b"/>
+    <text x="570" y="184" fill="#14202b" font-size="12">3,57</text>
+  </g>
+  <g>
+    <text x="28" y="222" fill="#14202b" font-size="12">Работа бригады</text>
+    <rect x="210" y="208" width="350" height="20" fill="#eef0ed"/>
+    <rect x="210" y="208" width="172" height="20" fill="#1f5fbf"/>
+    <text x="570" y="222" fill="#14202b" font-size="12">3,12</text>
+  </g>
+  <g>
+    <text x="28" y="260" fill="#14202b" font-size="12">Подсыпка + прочее</text>
+    <rect x="210" y="246" width="350" height="20" fill="#eef0ed"/>
+    <rect x="210" y="246" width="127" height="20" fill="#b8c0c4"/>
+    <text x="570" y="260" fill="#14202b" font-size="12">2,30</text>
+  </g>
+
+  <text x="596" y="108" fill="#8a9299" font-size="10" text-anchor="end" transform="translate(0,-2)">млн ֏</text>
+
+  <line x1="28" y1="292" x2="612" y2="292" stroke="#14202b" stroke-width="1.5"/>
+  <text x="28" y="322" fill="#14202b" font-size="17" font-weight="700" font-family="'Space Grotesk', sans-serif">ИТОГО</text>
+  <text x="612" y="322" fill="#c8532a" font-size="17" font-weight="700" text-anchor="end" font-family="'Space Grotesk', sans-serif">≈ 20 700 000 ֏</text>
+  <text x="612" y="344" fill="#8a9299" font-size="11" text-anchor="end">≈ 54 000 $ · ≈ 73 000 ֏/м²</text>
+
+  <text x="612" y="378" fill="#8a9299" font-size="11" text-anchor="end">Л.10</text>
+  <text x="28" y="378" fill="#8a9299" font-size="11">оценка без чертежей · ±15%</text>
+</svg>
