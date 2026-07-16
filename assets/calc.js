@@ -7,13 +7,13 @@
   var root = document.getElementById('calc-app');
   if (!root) return;
 
-  var LS = 'myhome-calc-v4';
+  var LS = 'myhome-calc-v5';
   var PART_COEF = 0.095;
 
   var DEFAULTS = {
     dims: { L: 14, B: 13, n: 2, H: 3, hall: 80, fLen: 84, fW: 50, fH: 80, tGround: 10, tLean: 10,
             tSlab: 16, tExt: 20, colN: 20, colW: 30, beamLen: 188, beamSec: 0.12, openPct: 15, resPct: 5,
-            bsmtOn: 0, bsmtDepth: 2.4, bsmtWall: 25 },
+            hallBeams: 1, bsmtOn: 0, bsmtDepth: 2.4, bsmtWall: 25 },
     prices: { concrete: 40000, lean: 30000, rebar: 350000, gasblock: 42000, bedding: 8000,
               miscPct: 10, labor: 11000, rate: 385, exc: 2500, earth: 2500, wproof: 6000 }
   };
@@ -128,8 +128,9 @@
       foundRows = [['Ленточный фундамент', vLenta, vLenta * 100], ['Пол по грунту', vFloorG, vFloorG * 70]];
     }
 
+    var hallSpan = Math.round(Math.sqrt(d.hall / 1.25));
     var vCols = d.colN * Math.pow(d.colW / 100, 2) * Htot;
-    var vBeams = d.beamLen * d.beamSec;
+    var vBeams = (d.beamLen + (d.hallBeams ? 2 * hallSpan : 0)) * d.beamSec;  // +2 ригеля над залом
     var vSlab = upper * d.tSlab / 100;
     var vRoof = footprint * d.tSlab / 100;
     var m300base = foundConc + vCols + vBeams + vSlab + vRoof;
@@ -184,21 +185,26 @@
     var warn = [];
     var shag = Math.sqrt(footprint / Math.max(1, d.colN));
     var recSlab = Math.ceil(shag * 100 / 30);
-    var hallSpan = Math.round(Math.sqrt(d.hall / 1.25));
     if (d.tSlab < recSlab)
-      warn.push('Перекрытие ' + d.tSlab + ' см при пролёте ≈ ' + shag.toFixed(1) + ' м. По нормам ЖБК Армении (ՀՀՇՆ 52; ориентир 1/30 пролёта) нужно ≈ ' + recSlab + ' см. → Увеличьте «Перекрытие» до ' + recSlab + ' см или добавьте колонн (меньше пролёт).');
+      warn.push({ msg: 'Перекрытие ' + d.tSlab + ' см при пролёте ≈ ' + shag.toFixed(1) + ' м. По нормам ЖБК Армении (ՀՀՇՆ 52; ориентир 1/30 пролёта) нужно ≈ ' + recSlab + ' см. → Увеличьте «Перекрытие» до ' + recSlab + ' см или добавьте колонн.',
+        fix: { label: 'плита ' + recSlab + ' см', path: 'dims.tSlab', val: recSlab } });
     if (shag > 6)
-      warn.push('Шаг колонн ≈ ' + shag.toFixed(1) + ' м > 6 м — безбалочная плита требует расчёта на продавливание/преднапряжения. → Добавьте колонн (шаг 4–6 м) или заложите ж/б ригели.');
-    if (hallSpan > 6)
-      warn.push('Кровля над залом перекрывает пролёт ≈ ' + hallSpan + ' м. Плоская плита без опор — до 6 м (нормы ЖБК ՀՀՇՆ 52). → Добавьте ж/б балки (ригели) над залом с шагом 3–4 м — плита обопрётся на них.');
+      warn.push({ msg: 'Шаг колонн ≈ ' + shag.toFixed(1) + ' м > 6 м — безбалочная плита требует расчёта на продавливание. → Добавьте колонн (шаг 4–6 м) или заложите ж/б ригели.',
+        fix: { label: 'колонн ' + Math.ceil(footprint / 30), path: 'dims.colN', val: Math.ceil(footprint / 30) } });
+    if (hallSpan > 6 && !d.hallBeams)
+      warn.push({ msg: 'Кровля над залом перекрывает пролёт ≈ ' + hallSpan + ' м. Плоская плита без опор — до 6 м (ЖБК ՀՀՇՆ 52). → Заложите ж/б балки (ригели) над залом с шагом 3–4 м.',
+        fix: { label: 'заложить балки над залом', path: 'dims.hallBeams', val: 1 } });
     if (d.H < 2.7)
-      warn.push('Высота этажа ' + d.H + ' м ниже 2,7 м — минимум для жилых помещений. → Увеличьте высоту до ≥ 2,7 м.');
+      warn.push({ msg: 'Высота этажа ' + d.H + ' м ниже 2,7 м — минимум для жилых помещений. → Увеличьте до ≥ 2,7 м.',
+        fix: { label: 'высота 2,7 м', path: 'dims.H', val: 2.7 } });
     if (d.n > 2)
-      warn.push('Этажей ' + d.n + ' — по ՀՀՇՆ II-6.02-2006 обязателен сейсморасчёт и усиленный монолитный каркас. → Закажите проект конструктора.');
+      warn.push({ msg: 'Этажей ' + d.n + ' — по ՀՀՇՆ II-6.02-2006 обязателен сейсморасчёт и усиленный монолитный каркас. → Закажите проект конструктора.', fix: null });
     if (!bsmt && d.fW < 40)
-      warn.push('Ширина ленты ' + d.fW + ' см меньше 40 см (минимум для 2 этажей). → Расширьте ленту до 40–60 см.');
+      warn.push({ msg: 'Ширина ленты ' + d.fW + ' см меньше 40 см (минимум для 2 этажей). → Расширьте до 40–60 см.',
+        fix: { label: 'лента 50 см', path: 'dims.fW', val: 50 } });
     if (!bsmt && d.fH < 60)
-      warn.push('Заглубление ленты ' + d.fH + ' см — рекомендуется ниже глубины промерзания (60–80 см). → Заглубите до 60–100 см.');
+      warn.push({ msg: 'Заглубление ленты ' + d.fH + ' см — рекомендуется ниже промерзания (60–80 см). → Заглубите до 60–100 см.',
+        fix: { label: 'лента 80 см', path: 'dims.fH', val: 80 } });
 
     return {
       footprint: footprint, useful: useful, laborArea: laborArea, Htot: Htot, extArea: extArea, bsmt: bsmt,
@@ -269,6 +275,7 @@
       + dim('tSlab', 'Перекрытие, см') + dim('tExt', 'Стена нар., см')
       + dim('colN', 'Колонн, шт', '1') + dim('colW', 'Колонна, см')
       + dim('beamLen', 'Ригели, пог.м') + dim('beamSec', 'Ригель сеч., м²', '0.01')
+      + '<div class="dim"><label>Балки над залом</label><label class="chkline"><input type="checkbox" class="chk" data-path="dims.hallBeams"' + (V.dims.hallBeams ? ' checked' : '') + '> заложены</label></div>'
       + dim('openPct', 'Проёмы, %') + dim('resPct', 'Запас, %')
       + dim('bsmtDepth', 'Подвал глубина, м', '0.1') + dim('bsmtWall', 'Стена подвала, см')
       + '</div></details>'
@@ -345,7 +352,11 @@
       + '<button class="reset" id="c-csv">⤓ Скачать CSV</button>'
       + '<button class="reset" id="c-pdf">🖨 PDF / печать</button>'
       + '<span class="rate">значения сохраняются в браузере</span></div>'
-      + '</section>';
+      + '</section>'
+      + '<section class="block"><h2>График платежей по этапам <span class="tag">CASH</span></h2>'
+      + '<p class="sub">Сколько денег нужно на каждом этапе и нарастающим итогом (по ходу стройки).</p>'
+      + '<table class="calc"><thead><tr><th>Этап</th><th>Сумма, ֏</th><th>Нарастающим</th><th>% от «под ключ»</th></tr></thead>'
+      + '<tbody id="paybody"></tbody></table></section>';
   }
 
   // ── чтение / вывод ──
@@ -394,6 +405,15 @@
     if (bar) bar.innerHTML = '<span class="s1" style="width:' + (r.box / tk * 100) + '%"></span>'
       + '<span class="s2" style="width:' + (r.finish / tk * 100) + '%"></span>'
       + '<span class="s3" style="width:' + (r.siteTotal / tk * 100) + '%"></span>';
+    // график платежей
+    var stages = [['Земляные работы', r.earthTotal], ['Материалы коробки', r.materials],
+      ['Работа бригады', r.labor], ['Окна и двери', r.openTotal],
+      ['Отделка и инженерия', r.finish], ['Благоустройство', r.siteTotal]];
+    var cum = 0, pb = document.getElementById('paybody');
+    if (pb) pb.innerHTML = stages.map(function (s) {
+      cum += s[1];
+      return '<tr><td>' + s[0] + '</td><td class="r">' + fmt(s[1]) + '</td><td class="r">' + fmt(cum) + '</td><td class="r">' + Math.round(s[1] / tk * 100) + '%</td></tr>';
+    }).join('') + '<tr class="sub"><td>Итого под ключ</td><td class="r">' + fmt(tk) + '</td><td class="r">' + fmt(cum) + '</td><td class="r">100%</td></tr>';
     set('t-usd', fmt(r.box / (V.prices.rate || 385)));
     set('t-perm2', fmt(r.box / (r.useful || 1)));
     set('t-perm2t', fmt(r.turnkey / (r.useful || 1)));
@@ -403,7 +423,10 @@
     if (adv) {
       if (r.warnings.length) {
         adv.className = 'advisory warn';
-        adv.innerHTML = '⚠️ Проверьте у инженера (параметры вне типовых рамок):<ul><li>' + r.warnings.join('</li><li>') + '</li></ul>';
+        adv.innerHTML = '⚠️ Проверьте у инженера (нормы Армении):<ul>' + r.warnings.map(function (w) {
+          var btn = w.fix ? ' <button class="fixbtn" data-fixpath="' + w.fix.path + '" data-fixval="' + w.fix.val + '">✓ применить: ' + w.fix.label + '</button>' : '';
+          return '<li>' + w.msg + btn + '</li>';
+        }).join('') + '</ul>';
       } else {
         adv.className = 'advisory ok';
         adv.innerHTML = '✓ Параметры в типовых рамках. Джрвеж (Котайк) — высокосейсмичная зона (до 0,4g): точные сечения и армирование задаёт проект по нормам Армении ՀՀՇՆ II-6.02-2006 (сейсмика) и ՀՀՇՆ 52 (ЖБК).';
@@ -453,8 +476,20 @@
     root.addEventListener('input', refresh);
     root.addEventListener('change', refresh);
     root.addEventListener('click', function (e) {
-      var p = e.target && e.target.getAttribute && e.target.getAttribute('data-preset');
-      if (p) applyPreset(p);
+      var t = e.target;
+      if (!t || !t.getAttribute) return;
+      var p = t.getAttribute('data-preset');
+      if (p) { applyPreset(p); return; }
+      var fp = t.getAttribute('data-fixpath');
+      if (fp) {
+        var inp = root.querySelector('[data-path="' + fp + '"]');
+        var val = t.getAttribute('data-fixval');
+        if (inp) {
+          if (inp.type === 'checkbox') inp.checked = (+val === 1);
+          else inp.value = val;
+          refresh();
+        }
+      }
     });
     document.getElementById('c-reset').addEventListener('click', reset);
     document.getElementById('c-csv').addEventListener('click', csv);

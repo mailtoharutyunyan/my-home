@@ -193,7 +193,10 @@ table.calc tr.off{opacity:.4}
 .advisory{margin-top:12px;font-size:13px;border-radius:8px;padding:10px 14px;border:1px solid var(--line2);color:var(--muted)}
 .advisory.warn{border-color:var(--accent);background:rgba(221,143,66,.08);color:var(--ink)}
 .advisory ul{margin:6px 0 0;padding-left:18px}
-.advisory li{margin:3px 0}
+.advisory li{margin:5px 0}
+.fixbtn{font-family:var(--mono);font-size:11px;padding:3px 9px;margin-left:6px;border:1px solid var(--accent);
+  background:transparent;color:var(--accent-ink);border-radius:6px;cursor:pointer;white-space:nowrap}
+.fixbtn:hover{background:var(--accent);color:var(--btn-ink)}
 /* результат-карточка сверху калькулятора */
 .result-card{position:sticky;top:106px;z-index:10}
 .rc-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
