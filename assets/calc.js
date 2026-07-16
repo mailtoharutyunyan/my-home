@@ -183,12 +183,22 @@
     // подсказки по нормам (не расчёт, ориентир)
     var warn = [];
     var shag = Math.sqrt(footprint / Math.max(1, d.colN));
-    if (shag > 4.5) warn.push('шаг колонн ≈ ' + shag.toFixed(1) + ' м — обычно ≤ 4 м; добавьте колонн или увеличьте сечение ригелей');
-    if (d.tSlab < 16) warn.push('перекрытие ' + d.tSlab + ' см — для жилых пролётов обычно ≥ 16 см');
-    if (d.n > 2) warn.push('этажей ' + d.n + ' — усиленный каркас и сейсморасчёт обязательны');
-    if (d.hall > 55) warn.push('зал ' + d.hall + ' м² — большой пролёт кровли, нужны балки / толще плита над залом');
-    if (!bsmt && d.fW < 40) warn.push('ширина ленты ' + d.fW + ' см маловата для 2 этажей (обычно 40–60 см)');
-    if (!bsmt && d.fH < 60) warn.push('высота ленты ' + d.fH + ' см — для дома обычно 60–100 см');
+    var recSlab = Math.ceil(shag * 100 / 30);
+    var hallSpan = Math.round(Math.sqrt(d.hall / 1.25));
+    if (d.tSlab < recSlab)
+      warn.push('Перекрытие ' + d.tSlab + ' см при пролёте ≈ ' + shag.toFixed(1) + ' м. По нормам ЖБК Армении (ՀՀՇՆ 52; ориентир 1/30 пролёта) нужно ≈ ' + recSlab + ' см. → Увеличьте «Перекрытие» до ' + recSlab + ' см или добавьте колонн (меньше пролёт).');
+    if (shag > 6)
+      warn.push('Шаг колонн ≈ ' + shag.toFixed(1) + ' м > 6 м — безбалочная плита требует расчёта на продавливание/преднапряжения. → Добавьте колонн (шаг 4–6 м) или заложите ж/б ригели.');
+    if (hallSpan > 6)
+      warn.push('Кровля над залом перекрывает пролёт ≈ ' + hallSpan + ' м. Плоская плита без опор — до 6 м (нормы ЖБК ՀՀՇՆ 52). → Добавьте ж/б балки (ригели) над залом с шагом 3–4 м — плита обопрётся на них.');
+    if (d.H < 2.7)
+      warn.push('Высота этажа ' + d.H + ' м ниже 2,7 м — минимум для жилых помещений. → Увеличьте высоту до ≥ 2,7 м.');
+    if (d.n > 2)
+      warn.push('Этажей ' + d.n + ' — по ՀՀՇՆ II-6.02-2006 обязателен сейсморасчёт и усиленный монолитный каркас. → Закажите проект конструктора.');
+    if (!bsmt && d.fW < 40)
+      warn.push('Ширина ленты ' + d.fW + ' см меньше 40 см (минимум для 2 этажей). → Расширьте ленту до 40–60 см.');
+    if (!bsmt && d.fH < 60)
+      warn.push('Заглубление ленты ' + d.fH + ' см — рекомендуется ниже глубины промерзания (60–80 см). → Заглубите до 60–100 см.');
 
     return {
       footprint: footprint, useful: useful, laborArea: laborArea, Htot: Htot, extArea: extArea, bsmt: bsmt,
@@ -233,23 +243,36 @@
     }).join('');
 
     root.innerHTML =
-      '<section class="block"><h2>Габариты и параметры <span class="tag">DIM</span></h2>'
-      + '<p class="sub">Меняйте — объёмы, окна/двери и земляные работы пересчитываются. Толщины в сантиметрах.</p>'
+      // ── Результат сверху ──
+      '<section class="block result-card">'
+      + '<div class="rc-grid">'
+      + '<div><div class="rc-k">Коробка · тёплый контур</div><div class="rc-v"><span id="rc-box">0</span> ֏</div><div class="rc-sub" id="rc-box-sub"></div></div>'
+      + '<div><div class="rc-k">Под ключ · с отделкой и участком</div><div class="rc-v key"><span id="rc-tk">0</span> ֏</div><div class="rc-sub" id="rc-tk-sub"></div></div>'
+      + '</div>'
+      + '<div class="rc-bar" id="rc-bar"></div>'
+      + '<div class="rc-leg"><span><i class="l1"></i>коробка</span><span><i class="l2"></i>отделка/инженерия</span><span><i class="l3"></i>участок</span></div>'
+      + '</section>'
+
+      // ── 1. Параметры дома (основное) ──
+      + '<section class="block"><h2>1 · Параметры дома <span class="tag">DIM</span></h2>'
+      + '<p class="sub">Заполните основное — суммы считаются сразу. Инженерные параметры — в «расширенных».</p>'
       + '<div class="dim-grid">'
       + dim('L', 'Фасад L, м') + dim('B', 'Глубина B, м') + dim('n', 'Этажей', '1')
       + dim('H', 'Высота этажа, м', '0.1') + dim('hall', 'Зал, м²')
+      + '<div class="dim"><label>Подвал</label><label class="chkline"><input type="checkbox" class="chk" data-path="dims.bsmtOn"' + (V.dims.bsmtOn ? ' checked' : '') + '> есть подвал</label></div>'
+      + '</div>'
+      + '<div class="sub" id="dim-out"></div>'
+      + '<div id="norm-advisory"></div>'
+      + '<details class="adv"><summary>⚙ Расширенные параметры (для инженера)</summary><div class="dim-grid">'
       + dim('fLen', 'Лента, пог.м') + dim('fW', 'Лента ширина, см') + dim('fH', 'Лента высота, см')
       + dim('tGround', 'Пол по грунту, см') + dim('tLean', 'Подбетонка, см')
       + dim('tSlab', 'Перекрытие, см') + dim('tExt', 'Стена нар., см')
       + dim('colN', 'Колонн, шт', '1') + dim('colW', 'Колонна, см')
       + dim('beamLen', 'Ригели, пог.м') + dim('beamSec', 'Ригель сеч., м²', '0.01')
       + dim('openPct', 'Проёмы, %') + dim('resPct', 'Запас, %')
-      + '<div class="dim"><label>Подвал</label><label class="chkline"><input type="checkbox" class="chk" data-path="dims.bsmtOn"' + (V.dims.bsmtOn ? ' checked' : '') + '> есть подвал</label></div>'
       + dim('bsmtDepth', 'Подвал глубина, м', '0.1') + dim('bsmtWall', 'Стена подвала, см')
-      + '</div>'
-      + '<div class="sub" id="dim-out"></div>'
-      + '<div id="norm-advisory"></div>'
-      + '<div style="margin-top:14px">' + presetBar + '</div></section>'
+      + '</div></details>'
+      + '<div style="margin-top:16px"><div class="rc-k" style="margin-bottom:8px">2 · Уровень комплектации</div>' + presetBar + '</div></section>'
 
       + '<section class="block"><h2>Земляные работы <span class="tag">ЗЕМ</span></h2>'
       + '<p class="sub">Копка, вывоз и засыпка. С подвалом — котлован вместо траншей.</p>'
@@ -362,6 +385,15 @@
     renderGroup(r.finRows, V.fin, 'f'); set('t-finish', fmt(r.finish)); set('t-finish2', fmt(r.finish));
     renderGroup(r.siteRows, V.site, 's'); set('t-site', fmt(r.siteTotal)); set('t-site2', fmt(r.siteTotal));
     set('t-turnkey', fmt(r.turnkey));
+    // верхняя карточка-результат
+    var rate = V.prices.rate || 385, tk = r.turnkey || 1;
+    set('rc-box', fmt(r.box)); set('rc-tk', fmt(r.turnkey));
+    set('rc-box-sub', '≈ $' + fmt(r.box / rate) + ' · ' + fmt(r.box / (r.useful || 1)) + ' ֏/м²');
+    set('rc-tk-sub', '≈ $' + fmt(r.turnkey / rate) + ' · ' + fmt(r.turnkey / (r.useful || 1)) + ' ֏/м²');
+    var bar = document.getElementById('rc-bar');
+    if (bar) bar.innerHTML = '<span class="s1" style="width:' + (r.box / tk * 100) + '%"></span>'
+      + '<span class="s2" style="width:' + (r.finish / tk * 100) + '%"></span>'
+      + '<span class="s3" style="width:' + (r.siteTotal / tk * 100) + '%"></span>';
     set('t-usd', fmt(r.box / (V.prices.rate || 385)));
     set('t-perm2', fmt(r.box / (r.useful || 1)));
     set('t-perm2t', fmt(r.turnkey / (r.useful || 1)));
@@ -374,7 +406,7 @@
         adv.innerHTML = '⚠️ Проверьте у инженера (параметры вне типовых рамок):<ul><li>' + r.warnings.join('</li><li>') + '</li></ul>';
       } else {
         adv.className = 'advisory ok';
-        adv.innerHTML = '✓ Параметры в типовых рамках для дома этого размера. Точные сечения и армирование под сейсмику задаёт проект инженера (ՀՀՇՆ II-6.02).';
+        adv.innerHTML = '✓ Параметры в типовых рамках. Джрвеж (Котайк) — высокосейсмичная зона (до 0,4g): точные сечения и армирование задаёт проект по нормам Армении ՀՀՇՆ II-6.02-2006 (сейсмика) и ՀՀՇՆ 52 (ЖБК).';
       }
     }
     set('hdr-total', '≈ ' + f1(r.box / 1e6) + ' млн ֏');
